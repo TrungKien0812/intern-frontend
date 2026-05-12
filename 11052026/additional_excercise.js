@@ -40,3 +40,17 @@ const {
 } = person;
 const result = { firstName, gender, degree, English: languages[0] };
 console.log(result);
+
+function getInfo(obj) {
+  // const firstName = obj.firstName === undefined ? "Quan" : obj.firstName;
+  // const degree = obj.degree === undefined ? "NA" : obj.degree;
+  const { firstName = "Quan", degree = "NA" } = obj;
+  console.log(firstName, degree);
+}
+const sinhvien = {
+  firstName: "Kien",
+  gender: "male",
+  degree: "Bachelor",
+  english: "English",
+};
+getInfo(sinhvien);
