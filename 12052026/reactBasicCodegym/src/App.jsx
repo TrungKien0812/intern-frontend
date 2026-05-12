@@ -5,8 +5,8 @@ import "./index.css";
 function App() {
   const cities = React.createElement(
     "ul",
-    null,
-    React.createElement("li", null, "Ha Noi"),
+    { style: { color: "tomato", listStyleType: "none", fontWeight: "bold" } },
+    React.createElement("li", { style: { color: "tomato" } }, "Ha Noi"),
     React.createElement("li", null, "Da Nang"),
     React.createElement("li", null, "TPHCM"),
     React.createElement("li", null, "Hai Phong"),
@@ -25,7 +25,7 @@ function App() {
   ];
   return (
     <>
-      <h1>List of cities:</h1>
+      <h1 style={{ color: "red" }}>List of cities:</h1>
       {cities}
       <table className="table">
         <thead>
