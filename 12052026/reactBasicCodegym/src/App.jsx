@@ -1,6 +1,7 @@
 import "./App.css";
 import React from "react";
 import "bootstrap/dist/css/bootstrap.css";
+import "./index.css";
 function App() {
   const cities = React.createElement(
     "ul",
