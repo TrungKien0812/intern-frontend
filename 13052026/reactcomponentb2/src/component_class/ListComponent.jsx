@@ -1,17 +1,18 @@
 import React from "react";
-import { getAll } from "../services/studentService";
+import { getAll, toggleCompleted } from "../services/todoService.js";
 import DeleteComponent from "./DeleteComponent.jsx";
 import AddComponent from "./AddComponent.jsx";
+
 class ListComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      studentList: [],
+      todoList: [],
       isShowModal: false,
       isShowAddModal: false,
-      deleteStudent: {
+      deleteTodo: {
         id: "",
-        name: "",
+        title: "",
       },
       isLoading: false,
     };
@@ -22,77 +23,100 @@ class ListComponent extends React.Component {
       isLoading: true,
     });
   };
+
   closeModal = () => {
     this.setState({
       isShowModal: false,
     });
   };
+
   openAddModal = () => {
     this.setState({
       isShowAddModal: true,
     });
   };
+
   closeAddModal = () => {
     this.setState({
       isShowAddModal: false,
     });
   };
-  componentDidUpdate(prevProps, prevState, snapshot) {
+
+  handleToggleCompleted = (id) => {
+    toggleCompleted(id);
+    this.setIsLoading();
+  };
+
+  componentDidUpdate(prevProps, prevState) {
     if (prevState.isLoading !== this.state.isLoading) {
       this.setState({
-        studentList: [...getAll()],
+        todoList: [...getAll()],
         isLoading: false,
       });
     }
   }
+
   componentDidMount() {
     this.setState({
-      //Take all students returned from getAll() and copy them into a new array.
-      studentList: [...getAll()],
+      todoList: [...getAll()],
     });
   }
+
   render() {
     return (
       <>
         {console.log("---------list render ---------------")}
-        <h1 className={"my-title"}> Student List</h1>
+        <h1 className={"my-title"}>Danh sách công việc</h1>
         <button
           onClick={this.openAddModal}
           className={"btn btn-sm btn-success w-25"}
         >
-          {" "}
-          Add new student
+          Thêm công việc
         </button>
         <table className={"table table-striped table-dark"}>
           <thead>
             <tr>
               <th>STT</th>
               <th>ID</th>
-              <th>Name</th>
-              <th>Age</th>
-              <th>Class</th>
-              <th>Delete</th>
+              <th>Tên công việc</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+              <th>Xóa</th>
             </tr>
           </thead>
           <tbody>
-            {this.state.studentList.map((s, i) => (
-              <tr key={s.id}>
-                <td>{i + 1}</td>
-                <td>{s.id}</td>
-                <td>{s.name}</td>
-                <td>{s.age}</td>
-                <td>{s.classname}</td>
+            {this.state.todoList.map((todo, index) => (
+              <tr key={todo.id}>
+                <td>{index + 1}</td>
+                <td>{todo.id}</td>
+                <td>{todo.title}</td>
+                <td>{todo.completed ? "Đã xong" : "Chưa xong"}</td>
+                <td>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      this.handleToggleCompleted(todo.id);
+                    }}
+                    className={`btn btn-sm ${
+                      todo.completed ? "btn-warning" : "btn-success"
+                    }`}
+                  >
+                    {todo.completed
+                      ? "Đánh dấu chưa xong"
+                      : "Đánh dấu hoàn thành"}
+                  </button>
+                </td>
                 <td>
                   <button
                     onClick={() => {
                       this.setState({
                         isShowModal: true,
-                        deleteStudent: s,
+                        deleteTodo: todo,
                       });
                     }}
                     className={"btn btn-sm btn-danger"}
                   >
-                    Delete
+                    Xóa
                   </button>
                 </td>
               </tr>
@@ -105,7 +129,7 @@ class ListComponent extends React.Component {
           setIsLoading={this.setIsLoading}
         />
         <DeleteComponent
-          deleteStudent={this.state.deleteStudent}
+          deleteTodo={this.state.deleteTodo}
           isShow={this.state.isShowModal}
           closeModal={this.closeModal}
           setIsLoading={this.setIsLoading}
@@ -114,4 +138,5 @@ class ListComponent extends React.Component {
     );
   }
 }
+
 export default ListComponent;
